@@ -86,36 +86,62 @@ function CabinRow({ cabin }) {
         <div>Fit up to {maxCapacity} Geusts</div>
         <Price>{formatCurrency(regularPrice)}</Price>
         <Discount>{formatCurrency(discount)}</Discount>
-        <Menus type="center">
-          <Modal>
-            <Menus.Menu>
-              <Menus.Toggle menuId={cabin.id}>
-                <HiDotsVertical />
-              </Menus.Toggle>
-              <Menus.List listId={cabin.id}>
-                <Menus.Button
-                  onClick={() => dublecatingCabin(cabin)}
-                  icon={<HiDocumentDuplicate />}
-                >
-                  dublecate
-                </Menus.Button>
+        {/* <Menus type="center">
+          <Menus.Menu>
+            <Menus.Toggle menuId={cabin.id}>
+              <HiDotsVertical />
+            </Menus.Toggle>
+            <Menus.List listId={cabin.id}>
+              <Modal>
                 <Modal.Open open="edite-cabin">
-                  <Menus.Button icon={<HiMiniPencil />}>edite</Menus.Button>
+                  <Button variation="secandry" size="small">
+                    <HiMiniPencil />
+                  </Button>
+                </Modal.Open>
+                <Modal.Window name="edite-cabin">
+                  <CreateCabinForm cabinToEdit={cabin} typeWindow="modal" />
+                </Modal.Window>
+              </Modal>
+              <Button
+                variation="secandry"
+                size="small"
+                disabled={isDublecating}
+                onClick={() => dublecatingCabin(cabin)}
+              >
+                <HiDocumentDuplicate />
+              </Button>
+              <Modal>
+                <Modal.Open open="edite-cabin">
+                  <Button disabled={isDeleting} variation="danger" size="small">
+                    <HiMiniTrash />
+                  </Button>
                 </Modal.Open>
 
-                <Modal.Open open="delete-cabin">
-                  <Menus.Button icon={<HiMiniTrash />}>delete</Menus.Button>
-                </Modal.Open>
-              </Menus.List>
-
-              <Modal.Window name="delete-cabin">
-                <ConfirmDelete onConfirm={() => mutate(id)} />
-              </Modal.Window>
-              <Modal.Window name="edite-cabin">
-                <CreateCabinForm cabinToEdit={cabin} />
-              </Modal.Window>
-            </Menus.Menu>
-          </Modal>
+                <Modal.Window name="edite-cabin">
+                  <ConfirmDelete onConfirm={() => mutate(id)} />
+                </Modal.Window>
+              </Modal>
+            </Menus.List>
+          </Menus.Menu>
+        </Menus> */}
+        <Menus type="center">
+          <Menus.Menu>
+            <Menus.Toggle menuId={cabin.id}>
+              <HiDotsVertical />
+            </Menus.Toggle>
+            <Menus.List listId={cabin.id}>
+              <Menus.Button icon={<HiDocumentDuplicate />}>
+                dublecate
+              </Menus.Button>
+              <Menus.Button
+                icon={<HiMiniPencil />}
+                onClick={() => dublecatingCabin(cabin)}
+              >
+                edite
+              </Menus.Button>
+              <Menus.Button icon={<HiMiniTrash />}>delete</Menus.Button>
+            </Menus.List>
+          </Menus.Menu>
         </Menus>
       </TableRow>
     </>

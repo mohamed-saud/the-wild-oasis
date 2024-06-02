@@ -1,9 +1,12 @@
+import { createContext, useContext, useRef, useState } from "react";
 import styled from "styled-components";
+import { useOutSide } from "../hooks/useOutSide";
 
 const StyledMenu = styled.div`
   display: flex;
   align-items: center;
   justify-content: flex-end;
+  position: relative;
 `;
 
 const StyledToggle = styled.button`
@@ -26,7 +29,8 @@ const StyledToggle = styled.button`
 `;
 
 const StyledList = styled.ul`
-  position: fixed;
+  position: absolute;
+  z-index: 99;
 
   background-color: var(--color-grey-0);
   box-shadow: var(--shadow-md);
@@ -60,3 +64,65 @@ const StyledButton = styled.button`
     transition: all 0.3s;
   }
 `;
+
+const menusContext = createContext();
+
+function Menus({ children }) {
+  const [isOpen, setIsOpen] = useState("");
+  const close = () => setIsOpen("");
+  const open = setIsOpen;
+  return (
+    <menusContext.Provider value={{ close, open, isOpen }}>
+      <StyledMenu>{children}</StyledMenu>
+    </menusContext.Provider>
+  );
+}
+function Toggle({ children, menuId }) {
+  const { open, close } = useContext(menusContext);
+
+  function handelClick(e) {
+    close();
+    open(menuId);
+    // const { x, y } = e.target.closest("button").getBoundingClientRect();
+    // setPosition({ x, y });
+  }
+
+  return <StyledToggle onClick={handelClick}>{children}</StyledToggle>;
+}
+function Menu({ children }) {
+  return children;
+}
+
+function List({ children, listId }) {
+  const { close } = useContext(menusContext);
+
+  const [ref] = useOutSide(close, true);
+
+  const { isOpen } = useContext(menusContext);
+  if (listId !== isOpen) return;
+  return (
+    <StyledList ref={ref} position={{ x: 20, y: 20 }}>
+      {children}
+    </StyledList>
+  );
+}
+
+function Button({ children, icon, onClick }) {
+  const { close } = useContext(menusContext);
+
+  function handelClick() {
+    close();
+    onClick();
+  }
+  return (
+    <StyledButton onClick={handelClick}>
+      {icon}
+      {children}
+    </StyledButton>
+  );
+}
+Menus.Toggle = Toggle;
+Menus.Button = Button;
+Menus.List = List;
+Menus.Menu = Menu;
+export default Menus;
